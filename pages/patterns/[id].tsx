@@ -10,7 +10,7 @@ import {
 } from "@mui/material"
 import { PhotoCamera } from "@mui/icons-material"
 import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup"
+// import { yupResolver } from "@hookform/resolvers/yup/dist/yup"
 import { useRouter } from "next/router"
 import { useGetPatternQuery } from "@/services/patterns"
 import { useCreateReferencesMutation } from "@/services/references"
@@ -32,15 +32,15 @@ function Pattern() {
     } = useRouter()
     const { data: pattern, isLoading, error } = useGetPatternQuery(id as string)
     const [
-        createReferences,
-        { error: createError, isLoading: isCreateLoading }
+        createReferences
+        // { error: createError, isLoading: isCreateLoading }
     ] = useCreateReferencesMutation()
     const {
         register,
         handleSubmit,
         setValue,
-        watch,
-        formState: { errors }
+        watch
+        // formState: { errors }
     } = useForm<CreateReference>()
 
     const onSubmit = async (data: CreateReference) => {
