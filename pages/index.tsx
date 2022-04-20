@@ -1,8 +1,8 @@
 import type { NextPage } from "next"
-import Pricing from "@/components/main"
+import Main from "@/components/main"
 
 const Home: NextPage = () => {
-    return <Pricing />
+    return <Main />
 }
 
 export default Home

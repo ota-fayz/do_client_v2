@@ -1,56 +1,29 @@
-import * as React from "react"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Card from "@mui/material/Card"
-import CardActions from "@mui/material/CardActions"
-import CardContent from "@mui/material/CardContent"
-import CardHeader from "@mui/material/CardHeader"
-import Grid from "@mui/material/Grid"
-import StarIcon from "@mui/icons-material/StarBorder"
-import Typography from "@mui/material/Typography"
-import Container from "@mui/material/Container"
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    Grid,
+    Typography,
+    Container
+} from "@mui/material"
+import LoadingButton from "@mui/lab/LoadingButton"
+import { useGetPatternsQuery } from "@/services/patterns"
+import { useState } from "react"
+import { getFlagByLang } from "@/helpers/getFlagByLang"
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material"
+import Link from "next/link"
 
-const tiers = [
-    {
-        title: "Free",
-        price: "0",
-        description: [
-            "10 users included",
-            "2 GB of storage",
-            "Help center access",
-            "Email support"
-        ],
-        buttonText: "Sign up for free",
-        buttonVariant: "outlined"
-    },
-    {
-        title: "Pro",
-        subheader: "Most popular",
-        price: "15",
-        description: [
-            "20 users included",
-            "10 GB of storage",
-            "Help center access",
-            "Priority email support"
-        ],
-        buttonText: "Get started",
-        buttonVariant: "contained"
-    },
-    {
-        title: "Enterprise",
-        price: "30",
-        description: [
-            "50 users included",
-            "30 GB of storage",
-            "Help center access",
-            "Phone & email support"
-        ],
-        buttonText: "Contact us",
-        buttonVariant: "outlined"
-    }
-]
+function MainContent() {
+    const [page, setPage] = useState(1)
+    const { data: patterns, isLoading, isFetching } = useGetPatternsQuery(page)
 
-function PricingContent() {
+    if (isLoading) return <h1>Loading</h1>
+
+    if (patterns?.results.length === 0) return <h1>No Patterns</h1>
+
     return (
         <>
             <Container
@@ -66,41 +39,17 @@ function PricingContent() {
                     color="text.primary"
                     gutterBottom
                 >
-                    Pricing
-                </Typography>
-                <Typography
-                    variant="h5"
-                    align="center"
-                    color="text.secondary"
-                    component="p"
-                >
-                    Quickly build an effective pricing table for your potential
-                    customers with this layout. It&apos;s built with default MUI
-                    components with little customization.
+                    Choose a template
                 </Typography>
             </Container>
-            {/* End hero unit */}
             <Container maxWidth="md" component="main">
                 <Grid container spacing={5} alignItems="flex-end">
-                    {tiers.map((tier) => (
-                        // Enterprise card is full width at sm breakpoint
-                        <Grid
-                            item
-                            key={tier.title}
-                            xs={12}
-                            sm={tier.title === "Enterprise" ? 12 : 6}
-                            md={4}
-                        >
+                    {patterns?.results.map((pattern) => (
+                        <Grid item key={pattern.id} xs={12} sm={4} md={4}>
                             <Card>
                                 <CardHeader
-                                    title={tier.title}
-                                    subheader={tier.subheader}
+                                    title={pattern.doc_type}
                                     titleTypographyProps={{ align: "center" }}
-                                    action={
-                                        tier.title === "Pro" ? (
-                                            <StarIcon />
-                                        ) : null
-                                    }
                                     subheaderTypographyProps={{
                                         align: "center"
                                     }}
@@ -122,52 +71,65 @@ function PricingContent() {
                                     >
                                         <Typography
                                             component="h2"
-                                            variant="h3"
+                                            variant="h5"
                                             color="text.primary"
                                         >
-                                            ${tier.price}
+                                            {pattern.name}
                                         </Typography>
                                         <Typography
-                                            variant="h6"
-                                            color="text.secondary"
+                                            component="h2"
+                                            variant="h5"
+                                            color="text.primary"
                                         >
-                                            /mo
+                                            &nbsp;
+                                            {getFlagByLang(pattern.language)}
                                         </Typography>
                                     </Box>
-                                    <ul>
-                                        {tier.description.map((line) => (
-                                            <Typography
-                                                component="li"
-                                                variant="subtitle1"
-                                                align="center"
-                                                key={line}
-                                            >
-                                                {line}
-                                            </Typography>
-                                        ))}
-                                    </ul>
                                 </CardContent>
                                 <CardActions>
-                                    <Button
-                                        fullWidth
-                                        variant={
-                                            tier.buttonVariant as
-                                                | "outlined"
-                                                | "contained"
-                                        }
+                                    <Link
+                                        href={`/patterns/${pattern.id}`}
+                                        passHref
                                     >
-                                        {tier.buttonText}
-                                    </Button>
+                                        <Button fullWidth variant="contained">
+                                            Get started
+                                        </Button>
+                                    </Link>
                                 </CardActions>
                             </Card>
                         </Grid>
                     ))}
+                </Grid>
+                <Grid
+                    sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        mt: 2,
+                        gap: 1
+                    }}
+                >
+                    <LoadingButton
+                        loading={!!isFetching}
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
+                    >
+                        <ArrowBackIos />
+                    </LoadingButton>
+                    <LoadingButton
+                        loading={!!isFetching}
+                        disabled={page === patterns?.total_pages}
+                        onClick={() => setPage(page + 1)}
+                    >
+                        <ArrowForwardIos />
+                    </LoadingButton>
+                    {page} / {patterns?.total_pages}
                 </Grid>
             </Container>
         </>
     )
 }
 
-export default function Pricing() {
-    return <PricingContent />
+export default function Main() {
+    return <MainContent />
 }
