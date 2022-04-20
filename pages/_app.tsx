@@ -5,6 +5,8 @@ import { CssBaseline, GlobalStyles } from "@mui/material"
 import Layout from "@/components/layout"
 import "@/styles/globals.css"
 import theme from "@/theme"
+import { Provider } from "react-redux"
+import { store } from "@/redux/store"
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -23,9 +25,11 @@ function MyApp({ Component, pageProps }: AppProps) {
                         ul: { margin: 0, padding: 0, listStyle: "none" }
                     }}
                 />
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
+                <Provider store={store}>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </Provider>
             </ThemeProvider>
         </>
     )

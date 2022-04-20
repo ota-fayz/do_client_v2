@@ -14,7 +14,7 @@ function Copyright(props: any) {
             <MUILink
                 target="_blank"
                 color="inherit"
-                href="https://www.instagram.com/ota.fayz/"
+                href="https://t.me/ota_fayz"
             >
                 &nbsp;Otabek Fayziev
             </MUILink>
@@ -22,7 +22,7 @@ function Copyright(props: any) {
             <MUILink
                 target="_blank"
                 color="inherit"
-                href="https://www.instagram.com/turqcacke/"
+                href="https://t.me/turquoise_cacke"
             >
                 &nbsp;Leonid Tsoy
             </MUILink>
