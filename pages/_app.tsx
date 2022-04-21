@@ -7,6 +7,8 @@ import "@/styles/globals.css"
 import theme from "@/theme"
 import { Provider } from "react-redux"
 import { store } from "@/redux/store"
+import "react-toastify/dist/ReactToastify.css"
+import { ToastContainer } from "react-toastify"
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -28,6 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <Provider store={store}>
                     <Layout>
                         <Component {...pageProps} />
+                        <ToastContainer theme="dark" />
                     </Layout>
                 </Provider>
             </ThemeProvider>

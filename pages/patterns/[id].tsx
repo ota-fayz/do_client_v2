@@ -5,21 +5,24 @@ import {
     Typography,
     Grid,
     TextField,
-    Button,
     IconButton
 } from "@mui/material"
+import LoadingButton from "@mui/lab/LoadingButton"
 import { PhotoCamera } from "@mui/icons-material"
 import { useForm } from "react-hook-form"
-// import { yupResolver } from "@hookform/resolvers/yup/dist/yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 import { useRouter } from "next/router"
-import { useGetPatternQuery } from "@/services/patterns"
-import { useCreateReferencesMutation } from "@/services/references"
-import { capitalizeFirstLetter } from "@/helpers/capitalizeFirstLetter"
-import { getFlagByLang } from "@/helpers/getFlagByLang"
-import { getTypeOfReference } from "@/helpers/getTypeOfReference"
+import { useGetPatternQuery, useCreateReferencesMutation } from "@/services"
+import {
+    capitalizeFirstLetter,
+    getFlagByLang,
+    getTypeOfReference,
+    getValidationForFile
+} from "@/helpers"
 import { CreateReference } from "@/interfaces/createReference"
-import { getValidationForFile } from "@/helpers/getValidationForFile"
 import { InputNone } from "@/components/inputeNone"
+import { schemaCreateReference } from "@/validation/createReference"
+import { toast } from "react-toastify"
 
 const checkTargetFiles = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
@@ -27,21 +30,24 @@ const checkTargetFiles = (e: ChangeEvent<HTMLInputElement>) => {
 }
 
 function Pattern() {
+    const router = useRouter()
     const {
         query: { id }
-    } = useRouter()
+    } = router
     const { data: pattern, isLoading, error } = useGetPatternQuery(id as string)
     const [
-        createReferences
-        // { error: createError, isLoading: isCreateLoading }
+        createReferences,
+        { error: createError, isLoading: isCreateLoading, isSuccess }
     ] = useCreateReferencesMutation()
     const {
         register,
         handleSubmit,
         setValue,
-        watch
-        // formState: { errors }
-    } = useForm<CreateReference>()
+        watch,
+        formState: { errors }
+    } = useForm<CreateReference>({
+        resolver: yupResolver(schemaCreateReference)
+    })
 
     const onSubmit = async (data: CreateReference) => {
         data.pattern_id = parseInt(id as string)
@@ -70,6 +76,13 @@ function Pattern() {
 
     if (error) return <h1>This template does not exist</h1>
 
+    if (isSuccess) {
+        router.replace("/").then()
+        toast.success(
+            "Request is sent successfully, now go to the status section"
+        )
+    }
+
     return (
         <Container component="main" maxWidth="sm">
             <Box
@@ -95,14 +108,20 @@ function Pattern() {
                         {pattern?.static_fields.map((field, index) => (
                             <Grid key={field.field_name} item xs={12} sm={4}>
                                 <TextField
-                                    // error
-                                    // helperText="Kutok"
                                     required
                                     fullWidth
                                     label={field.label.en}
+                                    error={!!errors.static_fields}
                                     {...register(
                                         `static_fields.${index}.value`
                                     )}
+                                    helperText={
+                                        errors.static_fields
+                                            ? capitalizeFirstLetter(
+                                                  field.field_name
+                                              ) + " is required"
+                                            : ""
+                                    }
                                 />
                             </Grid>
                         ))}
@@ -113,10 +132,16 @@ function Pattern() {
                                         required
                                         fullWidth
                                         label={field.label}
+                                        error={!!errors.reference_json}
                                         type={getTypeOfReference(field.type)}
                                         {...register(
                                             `reference_json.${index}.value`
                                         )}
+                                        helperText={
+                                            errors.reference_json
+                                                ? "Field is required"
+                                                : ""
+                                        }
                                     />
                                 </Grid>
                             ) : (
@@ -134,32 +159,58 @@ function Pattern() {
                                                 )
                                             }
                                         />
-                                        {field.label}&nbsp;({field.type})&nbsp;
-                                        <IconButton
-                                            color="primary"
-                                            aria-label="upload picture"
-                                            component="span"
+                                        <Typography
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center"
+                                            }}
                                         >
-                                            <PhotoCamera />
-                                        </IconButton>
-                                        &nbsp;
-                                        {typeof watch(field.id as any) ===
-                                        "object"
-                                            ? watch(field.id as any)?.name
-                                            : "❌"}
+                                            <Typography
+                                                component="span"
+                                                color={
+                                                    typeof watch(
+                                                        field.id as any
+                                                    ) === "object"
+                                                        ? ""
+                                                        : "error"
+                                                }
+                                            >
+                                                {field.label} ({field.type}
+                                                )&nbsp;
+                                            </Typography>
+                                            <IconButton
+                                                component="span"
+                                                color="primary"
+                                            >
+                                                <PhotoCamera />
+                                            </IconButton>
+                                            &nbsp;
+                                            {typeof watch(field.id as any) ===
+                                            "object"
+                                                ? watch(field.id as any)?.name
+                                                : "❌"}
+                                        </Typography>
                                     </label>
                                 </Grid>
                             )
                         )}
                     </Grid>
-                    <Button
+                    <LoadingButton
+                        loading={isCreateLoading}
                         type="submit"
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
                         Submit
-                    </Button>
+                    </LoadingButton>
+                    <Typography align="center" color="error">
+                        {/*TODO: Fix wrong interface*/}
+                        {/*@ts-ignore:next-line*/}
+                        {createError?.data.plain_message.map(
+                            (message: string) => message
+                        )}
+                    </Typography>
                 </Box>
             </Box>
         </Container>
