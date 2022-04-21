@@ -1,9 +1,20 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import {
+    BaseQueryFn,
+    fetchBaseQuery,
+    createApi,
+    FetchArgs
+} from "@reduxjs/toolkit/query/react"
 import { apiUrl } from "@/http"
+import { CreateResponsePattern } from "@/interfaces/createReference"
 
 export const references = createApi({
     reducerPath: "references",
-    baseQuery: fetchBaseQuery({ baseUrl: apiUrl }),
+    baseQuery: fetchBaseQuery({ baseUrl: apiUrl }) as BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        CreateResponsePattern,
+        {}
+    >,
     tagTypes: ["References"],
     endpoints: (builder) => ({
         createReferences: builder.mutation<FormData, FormData>({

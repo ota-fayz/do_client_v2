@@ -13,14 +13,21 @@ export const patterns = createApi({
     endpoints: (builder) => ({
         getPatterns: builder.query<
             PaginationResponse<PatternList>,
-            number | void
+            {
+                page: number
+                language?: string
+                doc_type?: string
+                search_word?: string
+            }
         >({
-            query: (page = 1) => ({
-                url: "pattern/",
-                params: {
-                    page: page
+            query: (arg) => {
+                const { page, language, doc_type, search_word } = arg
+                const page_size = 3
+                return {
+                    url: "pattern/",
+                    params: { page_size, page, language, doc_type, search_word }
                 }
-            }),
+            },
             providesTags: (result) =>
                 result
                     ? [

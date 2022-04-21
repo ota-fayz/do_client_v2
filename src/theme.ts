@@ -240,11 +240,10 @@ const theme = createTheme({
         },
         MuiSelect: {
             defaultProps: {
-                IconComponent: {
-                    // @ts-ignore
-                    type: {},
-                    compare: null
-                }
+                // IconComponent: {
+                //     type: {},
+                //     compare: null
+                // }
             },
             styleOverrides: {
                 iconFilled: {

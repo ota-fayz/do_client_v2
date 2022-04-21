@@ -14,3 +14,11 @@ export interface CreateReference {
     static_fields: StaticFields[]
     reference_json: DynamicFields[]
 }
+
+export interface CreateResponsePattern {
+    data: {
+        plain_message?: string[]
+        code?: number
+    }
+    status: number
+}
