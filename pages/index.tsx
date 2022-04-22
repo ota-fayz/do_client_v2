@@ -22,12 +22,13 @@ import React, { useState, ChangeEvent } from "react"
 import { getFlagByLang } from "@/helpers/getFlagByLang"
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material"
 import Link from "next/link"
+import { capitalizeFirstLetter, cutOffStrings } from "@/helpers"
 
 const Home: NextPage = () => {
-    const [page, setPage] = useState(1)
-    const [language, setLanguage] = useState<string | undefined>(undefined)
-    const [type, setType] = useState<string | undefined>(undefined)
-    const [name, setName] = useState<string | undefined>(undefined)
+    const [page, setPage] = useState<number>(1)
+    const [language, setLanguage] = useState<string>("")
+    const [type, setType] = useState<string>("")
+    const [name, setName] = useState<string>("")
     const {
         data: patterns,
         isLoading,
@@ -42,14 +43,17 @@ const Home: NextPage = () => {
 
     const handleChangeLanguage = (event: SelectChangeEvent) => {
         setLanguage(event.target.value as string)
+        setPage(1)
     }
 
     const handleChangeType = (event: SelectChangeEvent) => {
         setType(event.target.value as string)
+        setPage(1)
     }
 
     const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value as string)
+        setPage(1)
     }
 
     if (error) return <h1>Something bad happened, try later</h1>
@@ -92,7 +96,7 @@ const Home: NextPage = () => {
                                 label="Language"
                                 onChange={handleChangeLanguage}
                             >
-                                <MenuItem value={undefined}>All</MenuItem>
+                                <MenuItem value="">All</MenuItem>
                                 <MenuItem value="en">🇺🇸</MenuItem>
                                 <MenuItem value="ru">🇷🇺</MenuItem>
                                 <MenuItem value="uz">🇺🇿</MenuItem>
@@ -107,7 +111,7 @@ const Home: NextPage = () => {
                                 label="Type"
                                 onChange={handleChangeType}
                             >
-                                <MenuItem value={undefined}>All</MenuItem>
+                                <MenuItem value="">All</MenuItem>
                                 <MenuItem value="reference">Reference</MenuItem>
                                 <MenuItem value="application">
                                     Application
@@ -127,7 +131,9 @@ const Home: NextPage = () => {
                             <Grid item key={pattern.id} xs={12} sm={4} md={4}>
                                 <Card>
                                     <CardHeader
-                                        title={pattern.doc_type}
+                                        title={capitalizeFirstLetter(
+                                            pattern.doc_type
+                                        )}
                                         titleTypographyProps={{
                                             align: "center"
                                         }}
@@ -155,14 +161,23 @@ const Home: NextPage = () => {
                                                 variant="h5"
                                                 color="text.primary"
                                             >
-                                                {pattern.name}
+                                                {capitalizeFirstLetter(
+                                                    cutOffStrings(pattern.name)
+                                                )}
                                             </Typography>
+                                        </Box>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                alignItems: "baseline"
+                                            }}
+                                        >
                                             <Typography
                                                 component="h2"
                                                 variant="h5"
                                                 color="text.primary"
                                             >
-                                                &nbsp;
                                                 {getFlagByLang(
                                                     pattern.language
                                                 )}
