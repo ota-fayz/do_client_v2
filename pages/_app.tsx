@@ -29,6 +29,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 />
                 <Provider store={store}>
                     <Layout>
+                        {/*@ts-ignore*/}
                         <Component {...pageProps} />
                         <ToastContainer theme="dark" />
                     </Layout>
