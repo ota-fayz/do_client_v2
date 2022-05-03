@@ -44,9 +44,10 @@ function Pattern() {
         handleSubmit,
         setValue,
         watch,
-        formState: { errors }
+        formState: { isValid }
     } = useForm<CreateReference>({
-        resolver: yupResolver(schemaCreateReference)
+        resolver: yupResolver(schemaCreateReference),
+        mode: "onChange"
     })
 
     const onSubmit = async (data: CreateReference) => {
@@ -111,17 +112,17 @@ function Pattern() {
                                     required
                                     fullWidth
                                     label={field.label.en}
-                                    error={!!errors.static_fields}
                                     {...register(
                                         `static_fields.${index}.value`
                                     )}
-                                    helperText={
-                                        errors.static_fields
-                                            ? capitalizeFirstLetter(
-                                                  field.field_name
-                                              ) + " is required"
-                                            : ""
-                                    }
+                                    // error={!!errors.static_fields}
+                                    // helperText={
+                                    //     errors.static_fields
+                                    //         ? capitalizeFirstLetter(
+                                    //               field.field_name
+                                    //           ) + " is required"
+                                    //         : ""
+                                    // }
                                 />
                             </Grid>
                         ))}
@@ -132,16 +133,20 @@ function Pattern() {
                                         required
                                         fullWidth
                                         label={field.label}
-                                        error={!!errors.reference_json}
                                         type={getTypeOfReference(field.type)}
                                         {...register(
                                             `reference_json.${index}.value`
                                         )}
-                                        helperText={
-                                            errors.reference_json
-                                                ? "Field is required"
-                                                : ""
+                                        defaultValue={
+                                            getTypeOfReference(field.type) ===
+                                                "date" && "2022-11-24"
                                         }
+                                        // error={!!errors.reference_json}
+                                        // helperText={
+                                        //     errors.reference_json
+                                        //         ? "Field is required"
+                                        //         : ""
+                                        // }
                                     />
                                 </Grid>
                             ) : (
@@ -195,15 +200,21 @@ function Pattern() {
                             )
                         )}
                     </Grid>
-                    <LoadingButton
-                        loading={isCreateLoading}
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                    >
-                        Submit
-                    </LoadingButton>
+                    <Grid container justifyContent="flex-end">
+                        <Grid item xs={4}>
+                            <LoadingButton
+                                loading={isCreateLoading}
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                size="large"
+                                sx={{ mt: 3, mb: 2 }}
+                                disabled={!isValid}
+                            >
+                                Submit
+                            </LoadingButton>
+                        </Grid>
+                    </Grid>
                     <Typography align="center" color="error">
                         {/*TODO: Fix wrong interface*/}
                         {/*@ts-ignore:next-line*/}

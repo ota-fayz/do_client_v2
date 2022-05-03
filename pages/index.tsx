@@ -22,7 +22,7 @@ import React, { useState, ChangeEvent } from "react"
 import { getFlagByLang } from "@/helpers/getFlagByLang"
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material"
 import Link from "next/link"
-import { capitalizeFirstLetter, cutOffStrings } from "@/helpers"
+import { capitalizeFirstLetter } from "@/helpers"
 
 const Home: NextPage = () => {
     const [page, setPage] = useState<number>(1)
@@ -135,16 +135,12 @@ const Home: NextPage = () => {
                                             pattern.doc_type
                                         )}
                                         titleTypographyProps={{
-                                            align: "center"
-                                        }}
-                                        subheaderTypographyProps={{
-                                            align: "center"
+                                            align: "center",
+                                            fontWeight: "600"
                                         }}
                                         sx={{
                                             backgroundColor: (theme) =>
-                                                theme.palette.mode === "light"
-                                                    ? theme.palette.grey[200]
-                                                    : theme.palette.grey[700]
+                                                theme.palette.grey[700]
                                         }}
                                     />
                                     <CardContent>
@@ -157,12 +153,12 @@ const Home: NextPage = () => {
                                             }}
                                         >
                                             <Typography
-                                                component="h2"
                                                 variant="h5"
                                                 color="text.primary"
+                                                noWrap
                                             >
                                                 {capitalizeFirstLetter(
-                                                    cutOffStrings(pattern.name)
+                                                    pattern.name
                                                 )}
                                             </Typography>
                                         </Box>

@@ -16,7 +16,6 @@ import {
     SelectChangeEvent
 } from "@mui/material"
 import {
-    cutOffStrings,
     capitalizeFirstLetter,
     getStatusOfReference,
     formatDateWithTime
@@ -127,71 +126,79 @@ const Status = () => {
                                             reference.type
                                         )}
                                         titleTypographyProps={{
-                                            align: "center"
-                                        }}
-                                        subheaderTypographyProps={{
-                                            align: "center"
+                                            align: "center",
+                                            fontWeight: "600"
                                         }}
                                         sx={{
                                             backgroundColor: (theme) =>
-                                                theme.palette.mode === "light"
-                                                    ? theme.palette.grey[200]
-                                                    : theme.palette.grey[700]
+                                                theme.palette.grey[700]
                                         }}
                                     />
                                     <CardContent>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                                flexDirection: "column",
-                                                mb: 2
-                                            }}
-                                        >
+                                        <Box sx={{ mb: 2 }}>
                                             <Typography
                                                 variant="h5"
                                                 color="text.primary"
                                                 align="center"
+                                                noWrap
                                             >
-                                                {cutOffStrings(
+                                                {capitalizeFirstLetter(
                                                     reference.pattern_name
                                                 )}
+                                                {/*{cutOffStrings(*/}
+                                                {/*    reference.pattern_name*/}
+                                                {/*)}*/}
                                             </Typography>
-                                            <Chip
-                                                label={
-                                                    getStatusOfReference(
-                                                        reference.status
-                                                    ).label
-                                                }
-                                                color={
-                                                    getStatusOfReference(
-                                                        reference.status
-                                                    ).color
-                                                }
-                                                variant="outlined"
-                                            />
                                         </Box>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                flexDirection: "column",
-                                                alignItems: " center",
-                                                mb: 2
-                                            }}
-                                        >
-                                            <Typography color="text.primary">
-                                                {reference.identity_string}
+                                        <Box>
+                                            <Typography variant="subtitle1">
+                                                {capitalizeFirstLetter(
+                                                    reference.first_name
+                                                )}{" "}
+                                                {capitalizeFirstLetter(
+                                                    reference.last_name
+                                                )}
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    display: "flex"
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    color="primary"
+                                                >
+                                                    ID:
+                                                </Typography>
+                                                &nbsp;
+                                                <Typography>
+                                                    {reference.identity_string.toLowerCase()}
+                                                </Typography>
+                                            </Box>
+                                            <Typography
+                                                variant="subtitle1"
+                                                color="primary"
+                                            >
+                                                Status:{" "}
+                                                <Chip
+                                                    label={
+                                                        getStatusOfReference(
+                                                            reference.status
+                                                        ).label
+                                                    }
+                                                    color={
+                                                        getStatusOfReference(
+                                                            reference.status
+                                                        ).color
+                                                    }
+                                                    variant="filled"
+                                                />
                                             </Typography>
                                             <Typography
-                                                variant="h5"
-                                                color="text.primary"
+                                                align="center"
+                                                color="text.icon"
+                                                sx={{ mt: 2, fontSize: "12px" }}
                                             >
-                                                {reference.first_name}{" "}
-                                                {reference.last_name}
-                                            </Typography>
-                                            <Typography color="text.primary">
                                                 {formatDateWithTime(
                                                     reference.date_created
                                                 )}
