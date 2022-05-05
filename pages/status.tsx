@@ -150,15 +150,34 @@ const Status = () => {
                                                 {/*)}*/}
                                             </Typography>
                                         </Box>
-                                        <Box>
-                                            <Typography variant="subtitle1">
-                                                {capitalizeFirstLetter(
-                                                    reference.first_name
-                                                )}{" "}
-                                                {capitalizeFirstLetter(
-                                                    reference.last_name
-                                                )}
-                                            </Typography>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                gap: ".5rem"
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    display: "flex"
+                                                }}
+                                            >
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    color="primary"
+                                                >
+                                                    Name:
+                                                </Typography>
+                                                &nbsp;
+                                                <Typography variant="subtitle1">
+                                                    {capitalizeFirstLetter(
+                                                        reference.first_name
+                                                    )}{" "}
+                                                    {capitalizeFirstLetter(
+                                                        reference.last_name
+                                                    )}
+                                                </Typography>
+                                            </Box>
                                             <Box
                                                 sx={{
                                                     display: "flex"
