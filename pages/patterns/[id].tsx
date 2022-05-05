@@ -23,6 +23,7 @@ import { CreateReference } from "@/interfaces/createReference"
 import { InputNone } from "@/components/inputeNone"
 import { schemaCreateReference } from "@/validation/createReference"
 import { toast } from "react-toastify"
+import { getTodayDay } from "@/helpers/getTodayDay"
 
 const checkTargetFiles = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
@@ -139,7 +140,9 @@ function Pattern() {
                                         )}
                                         defaultValue={
                                             getTypeOfReference(field.type) ===
-                                                "date" && "2022-11-24"
+                                            "date"
+                                                ? getTodayDay()
+                                                : ""
                                         }
                                         // error={!!errors.reference_json}
                                         // helperText={
