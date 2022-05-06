@@ -112,7 +112,9 @@ function Pattern() {
                                 <TextField
                                     required
                                     fullWidth
-                                    label={field.label.en}
+                                    label={capitalizeFirstLetter(
+                                        field.label.en
+                                    )}
                                     {...register(
                                         `static_fields.${index}.value`
                                     )}
@@ -133,7 +135,9 @@ function Pattern() {
                                     <TextField
                                         required
                                         fullWidth
-                                        label={field.label}
+                                        label={capitalizeFirstLetter(
+                                            field.label
+                                        )}
                                         type={getTypeOfReference(field.type)}
                                         {...register(
                                             `reference_json.${index}.value`
@@ -183,7 +187,10 @@ function Pattern() {
                                                         : "error"
                                                 }
                                             >
-                                                {field.label} ({field.type}
+                                                {capitalizeFirstLetter(
+                                                    field.label
+                                                )}{" "}
+                                                ({field.type}
                                                 )&nbsp;
                                             </Typography>
                                             <IconButton
