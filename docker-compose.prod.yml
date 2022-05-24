@@ -1,0 +1,18 @@
+services:
+  app:
+    container_name: do-client
+    image: ota2411/dean-office:client-latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
+
+  nginx:
+    container_name: do-client-nginx
+    build: ./nginx
+    ports:
+      - "3001:80"
+    depends_on:
+      - app
+    restart: always
