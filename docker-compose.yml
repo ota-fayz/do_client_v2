@@ -1,0 +1,9 @@
+services:
+  app:
+    container_name: do-client
+    image: ota2411/dean-office:client-latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
