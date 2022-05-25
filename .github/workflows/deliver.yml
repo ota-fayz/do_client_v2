@@ -1,0 +1,17 @@
+name: Server delivery
+on:
+  push:
+    branches:
+      - prod
+jobs:
+  push_to_registry:
+      name: Deliver and deploy on server
+      runs-on: ubuntu-latest
+      steps:
+        - name: Deliver to production server
+          run: |
+            echo "${{ secrets.SERVER_KEY }}" > key
+            chmod 400 key
+            ssh -o StrictHostKeyChecking=no -i key -p ${{ secrets.SERVER_PORT }} \
+              ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} \
+              "cd /home/referencefront/code/do_client_v2;docker compose -f docker-compose.prod.yml rm -f -s -v;git pull;docker compose -f docker-compose.prod.yml up --build -d"
