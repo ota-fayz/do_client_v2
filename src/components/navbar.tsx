@@ -1,6 +1,7 @@
 import React from "react"
 import { AppBar, Toolbar, Typography, Link as MUILink } from "@mui/material"
 import Link from "next/link"
+import Image from "next/image"
 
 const Navbar = () => {
     return (
@@ -17,10 +18,12 @@ const Navbar = () => {
                     variant="h6"
                     color="inherit"
                     noWrap
-                    sx={{ flexGrow: 1 }}
+                    sx={{ flexGrow: 1, paddingTop: 1 }}
                 >
                     <Link href="/">
-                        <a>TTPU - Dean&apos;s Office</a>
+                        <a>
+                            <Image width="75px" height="75px" src="/logo.png" alt="logo" />
+                        </a>
                     </Link>
                 </Typography>
                 <nav>
